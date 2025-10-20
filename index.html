@@ -270,8 +270,9 @@
       }
 
       const formData = new FormData(form);
-      formData.append("waktu_penggunaan", waktu_penggunaan);
-      formData.append("jenis_kegiatan", jenisKegiatanValue);
+      formData.set("waktu_penggunaan", waktu_penggunaan); // set = ganti/overwrite kalau sudah ada
+      formData.set("jenis_kegiatan", jenisKegiatanValue); // pastikan hanya satu field ini yang dikirim
+
 
       try {
         const res = await fetch(SCRIPT_URL, { method: "POST", body: formData });
