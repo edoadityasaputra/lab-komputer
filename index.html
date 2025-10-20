@@ -10,41 +10,74 @@
       background-color: #f9f9f9;
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+    }
+
+    .header {
+      background-color: #2196F3;
+      color: white;
+      text-align: center;
+      padding: 25px 10px;
+    }
+
+    .header img {
+      width: 120px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .header h2, .header h3 {
+      margin: 5px 0;
     }
 
     #container {
-      width: 90%;
-      max-width: 400px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: calc(100vh - 200px);
+      margin-top: 20px;
+    }
+
+    form {
       background: white;
       padding: 25px;
       border-radius: 15px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
 
     input, select {
       width: 100%;
       padding: 10px;
-      margin-top: 8px;
       border-radius: 8px;
       border: 1px solid #ccc;
       box-sizing: border-box;
     }
 
     button {
-      margin-top: 15px;
       padding: 10px;
-      width: 100%;
       border: none;
       border-radius: 8px;
       font-size: 16px;
       color: white;
-      background-color: #2196F3;
       cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #loading, #result {
+      width: 90%;
+      max-width: 400px;
+      margin-top: 25px;
+      text-align: center;
     }
 
     #loading {
@@ -55,31 +88,38 @@
 
     #result {
       display: none;
-      text-align: left;
     }
 
     .rekap {
       background: #f2f8ff;
       padding: 15px;
       border-radius: 8px;
+      text-align: left;
       margin-top: 10px;
     }
 
     .success {
       color: green;
       font-weight: bold;
+      margin-bottom: 10px;
     }
 
     .backBtn {
       background-color: #4CAF50;
       margin-top: 20px;
+      width: 100%;
     }
   </style>
 </head>
 <body>
-  <div id="container">
+  <!-- 🔹 HEADER -->
+  <div class="header">
+    <img src="https://edoadityasaputra.github.io/barcode-to-sheet/MI-Khoirul-Huda_C3.png" alt="Logo Sekolah">
     <h2>Form Penggunaan Lab Komputer</h2>
+    <h3>MI Khoirul Huda Bedahan</h3>
+  </div>
 
+  <div id="container">
     <!-- 🔹 FORM -->
     <form id="labForm">
       <input type="text" name="nama_instansi" placeholder="Nama Instansi" required>
@@ -98,7 +138,7 @@
       <input type="date" name="tanggal" required>
       <input type="text" name="waktu_penggunaan" placeholder="Contoh: 09:00 - 10:00" required>
 
-      <button type="submit">Kirim</button>
+      <button type="submit" style="background-color:#2196F3;">Kirim</button>
     </form>
 
     <!-- 🔹 HALAMAN LOADING -->
@@ -133,11 +173,10 @@
         const res = await fetch(SCRIPT_URL, { method: "POST", body: formData });
         const text = await res.text();
 
-        // 🔹 Tampilkan halaman hasil
+        // 🔹 Tampilkan hasil
         loadingDiv.style.display = "none";
         resultDiv.style.display = "block";
 
-        // 🔹 Parsing hasil untuk ditampilkan rapi
         const json = JSON.parse(text);
         const d = json.data;
 
@@ -155,7 +194,6 @@
       }
     });
 
-    // 🔹 Tombol kembali ke form
     backBtn.addEventListener("click", () => {
       resultDiv.style.display = "none";
       form.style.display = "block";
