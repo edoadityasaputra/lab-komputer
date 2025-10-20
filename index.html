@@ -41,14 +41,14 @@
 
     form {
       background: white;
-      padding: 25px;
+      padding: 20px;
       border-radius: 15px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       width: 90%;
       max-width: 400px;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
     }
 
     input, select {
@@ -136,14 +136,14 @@
     .waktu-section label {
       font-weight: bold;
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
 
     .waktu-labels {
       display: flex;
       justify-content: space-between;
       font-weight: bold;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
 
     .waktu-box {
@@ -170,7 +170,7 @@
       border: none;
       background: transparent;
       text-align: center;
-      font-size: 16px;
+      font-size: 13px;
       outline: none;
     }
 
@@ -179,12 +179,13 @@
       color: #333;
     }
 
-    /* 🔹 Style untuk label form */
+    /* 🔹 Style untuk label form - JARAK LEBIH RAPAT */
     .form-label {
       font-weight: bold;
-      margin-bottom: 5px;
+      margin-bottom: 2px;
       display: block;
       color: #333;
+      font-size: 14px;
     }
 
     /* 🔹 Style khusus untuk input tanggal */
@@ -194,6 +195,11 @@
 
     input[type="date"]:invalid {
       color: #999;
+    }
+
+    /* 🔹 Group form yang rapat */
+    .form-group {
+      margin-bottom: 5px;
     }
   </style>
 </head>
@@ -206,52 +212,62 @@
 
   <div id="container">
     <form id="labForm">
-      <label class="form-label">Nama Instansi</label>
-      <select name="nama_instansi" required>
-        <option value="" disabled selected>-- Pilih Instansi --</option>
-        <option>RA KHOIRUL HUDA</option>
-        <option>MI KHOIRUL HUDA BEDAHAN</option>
-        <option>MIT RAUDLATUL ULUM</option>
-        <option>MTs SALAFIYAH</option>
-        <option>SMK TAMAN ILMU</option>
-      </select>
+      <div class="form-group">
+        <label class="form-label">Nama Instansi</label>
+        <select name="nama_instansi" required>
+          <option value="" disabled selected>-- Pilih Instansi --</option>
+          <option>RA KHOIRUL HUDA</option>
+          <option>MI KHOIRUL HUDA BEDAHAN</option>
+          <option>MIT RAUDLATUL ULUM</option>
+          <option>MTs SALAFIYAH</option>
+          <option>SMK TAMAN ILMU</option>
+        </select>
+      </div>
 
-      <label class="form-label">Nama Guru</label>
-      <input type="text" name="nama_guru" placeholder="Masukkan nama guru" required>
+      <div class="form-group">
+        <label class="form-label">Nama Guru</label>
+        <input type="text" name="nama_guru" placeholder="Masukkan nama guru" required>
+      </div>
 
-      <label class="form-label">Hari</label>
-      <select name="hari" required>
-        <option value="" disabled selected>-- Pilih Hari --</option>
-        <option>Senin</option>
-        <option>Selasa</option>
-        <option>Rabu</option>
-        <option>Kamis</option>
-        <option>Jumat</option>
-        <option>Sabtu</option>
-      </select>
+      <div class="form-group">
+        <label class="form-label">Hari</label>
+        <select name="hari" required>
+          <option value="" disabled selected>-- Pilih Hari --</option>
+          <option>Senin</option>
+          <option>Selasa</option>
+          <option>Rabu</option>
+          <option>Kamis</option>
+          <option>Jumat</option>
+          <option>Sabtu</option>
+        </select>
+      </div>
 
-      <!-- 🔹 PERBAIKAN: Input tanggal dengan label jelas -->
-      <label class="form-label">Tanggal Penggunaan</label>
-      <input type="date" name="tanggal" required title="Pilih tanggal penggunaan">
+      <!-- 🔹 PERBAIKAN: Input tanggal dengan label jelas dan jarak rapat -->
+      <div class="form-group">
+        <label class="form-label">Tanggal Penggunaan</label>
+        <input type="date" name="tanggal" required title="Pilih tanggal penggunaan">
+      </div>
 
       <!-- 🔹 Bagian waktu penggunaan -->
-      <div class="waktu-section">
-        <label class="form-label">Waktu Penggunaan</label>
-        <div class="waktu-labels">
-          <span>Mulai</span>
-          <span>Selesai</span>
-        </div>
-        <div class="waktu-box">
-          <div class="time-input">
-            <input type="number" id="jamMulai" min="0" max="23" placeholder="HH" required>
-            <span class="separator">:</span>
-            <input type="number" id="menitMulai" min="0" max="59" placeholder="MM" required>
+      <div class="form-group">
+        <div class="waktu-section">
+          <label class="form-label">Waktu Penggunaan</label>
+          <div class="waktu-labels">
+            <span>Mulai</span>
+            <span>Selesai</span>
           </div>
-          <span>-</span>
-          <div class="time-input">
-            <input type="number" id="jamSelesai" min="0" max="23" placeholder="HH" required>
-            <span class="separator">:</span>
-            <input type="number" id="menitSelesai" min="0" max="59" placeholder="MM" required>
+          <div class="waktu-box">
+            <div class="time-input">
+              <input type="number" id="jamMulai" min="0" max="23" placeholder="HH" required>
+              <span class="separator">:</span>
+              <input type="number" id="menitMulai" min="0" max="59" placeholder="MM" required>
+            </div>
+            <span>-</span>
+            <div class="time-input">
+              <input type="number" id="jamSelesai" min="0" max="23" placeholder="HH" required>
+              <span class="separator">:</span>
+              <input type="number" id="menitSelesai" min="0" max="59" placeholder="MM" required>
+            </div>
           </div>
         </div>
       </div>
