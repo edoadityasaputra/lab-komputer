@@ -1,130 +1,14 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Form Penggunaan Lab Komputer</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f9f9f9;
-      margin: 0;
-      padding: 0;
-    }
-
-    .header {
-      background: #2196F3;
-      color: white;
-      padding: 20px;
-    }
-
-    .header img {
-      width: 100px;
-      border-radius: 10px;
-      display: block;
-      margin: 0 auto 10px;
-    }
-
-    form {
-      background: white;
-      padding: 20px;
-      margin: 20px auto;
-      border-radius: 10px;
-      max-width: 400px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    label {
-      display: block;
-      text-align: left;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 8px;
-      background: #4CAF50;
-      color: white;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Coba Form</title>
 </head>
-<body>
-  <div class="header">
-    <img src="https://edoadityasaputra.github.io/barcode-to-sheet/MI-Khoirul-Huda_C3.png" alt="Logo Sekolah">
-    <h2>Form Penggunaan Lab Komputer</h2>
-    <h3>MI Khoirul Huda Bedahan</h3>
-  </div>
-
-  <form id="labForm">
-    <label>Nama Instansi</label>
-    <input type="text" name="nama_instansi" required>
-
-    <label>Nama Guru</label>
-    <input type="text" name="nama_guru" required>
-
-    <label>Hari</label>
-    <select name="hari" required>
-      <option value="" disabled selected>-- Pilih Hari --</option>
-      <option>Senin</option>
-      <option>Selasa</option>
-      <option>Rabu</option>
-      <option>Kamis</option>
-      <option>Jumat</option>
-      <option>Sabtu</option>
-    </select>
-
-    <label>Tanggal</label>
-    <input type="date" name="tanggal" required>
-
-    <label>Waktu Penggunaan</label>
-    <input type="text" name="waktu_penggunaan" placeholder="09:00 - 10:00" required>
-
-    <button type="submit">Kirim</button>
+<body style="font-family:sans-serif; text-align:center; margin-top:50px;">
+  <h2>Form Tes</h2>
+  <form>
+    <input type="text" placeholder="Isi sesuatu..." />
+    <button>Kirim</button>
   </form>
-
-  <div id="result"></div>
-
-  <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbziavkcZcSTVgiPHBAPv5F4IPgkgNSty2twOKwBlJVd-Ip3RbEUrzIqmpeBVC4MRB26/exec";
-    const form = document.getElementById("labForm");
-    const resultDiv = document.getElementById("result");
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      resultDiv.textContent = "⏳ Mengirim data...";
-
-      const data = Object.fromEntries(new FormData(form).entries());
-      try {
-        const res = await fetch(SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-        const text = await res.text();
-        resultDiv.innerHTML = `<span style="color:green;">✅ Data berhasil dikirim!</span><br>${text}`;
-        form.reset();
-      } catch (err) {
-        resultDiv.innerHTML = `<span style="color:red;">❌ Gagal mengirim data.</span>`;
-      }
-    });
-  </script>
 </body>
 </html>
