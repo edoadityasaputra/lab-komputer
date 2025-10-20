@@ -178,6 +178,23 @@
       font-weight: bold;
       color: #333;
     }
+
+    /* 🔹 Style untuk label form */
+    .form-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+      color: #333;
+    }
+
+    /* 🔹 Style khusus untuk input tanggal */
+    input[type="date"] {
+      position: relative;
+    }
+
+    input[type="date"]:invalid {
+      color: #999;
+    }
   </style>
 </head>
 <body>
@@ -189,6 +206,7 @@
 
   <div id="container">
     <form id="labForm">
+      <label class="form-label">Nama Instansi</label>
       <select name="nama_instansi" required>
         <option value="" disabled selected>-- Pilih Instansi --</option>
         <option>RA KHOIRUL HUDA</option>
@@ -198,8 +216,10 @@
         <option>SMK TAMAN ILMU</option>
       </select>
 
-      <input type="text" name="nama_guru" placeholder="Nama Guru" required>
+      <label class="form-label">Nama Guru</label>
+      <input type="text" name="nama_guru" placeholder="Masukkan nama guru" required>
 
+      <label class="form-label">Hari</label>
       <select name="hari" required>
         <option value="" disabled selected>-- Pilih Hari --</option>
         <option>Senin</option>
@@ -210,11 +230,13 @@
         <option>Sabtu</option>
       </select>
 
-      <input type="date" name="tanggal" required>
+      <!-- 🔹 PERBAIKAN: Input tanggal dengan label jelas -->
+      <label class="form-label">Tanggal Penggunaan</label>
+      <input type="date" name="tanggal" required title="Pilih tanggal penggunaan">
 
       <!-- 🔹 Bagian waktu penggunaan -->
       <div class="waktu-section">
-        <label>Waktu Penggunaan</label>
+        <label class="form-label">Waktu Penggunaan</label>
         <div class="waktu-labels">
           <span>Mulai</span>
           <span>Selesai</span>
