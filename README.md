@@ -1,1 +1,1 @@
-# lab-komputer
+# lab-komputer-mi
