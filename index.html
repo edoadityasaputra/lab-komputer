@@ -1,14 +1,232 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Coba Form</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Penggunaan Lab Komputer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    #appContainer {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .header {
+      position: relative;
+      text-align: center;
+      padding: 20px;
+      background: #2196F3;
+      color: white;
+      width: 100%;
+    }
+
+    .header img {
+      width: 120px;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .header h2, .header h3 {
+      margin: 5px 0;
+    }
+
+    form {
+      margin-top: 20px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      text-align: left;
+      font-weight: bold;
+    }
+
+    input, select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      color: white;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover { opacity: 0.9; }
+
+    #kirimBtn { background-color: #4CAF50; }
+    #resetBtn { background-color: #f44336; }
+
+    #result {
+      margin-top: 20px;
+      font-size: 17px;
+      color: #333;
+      min-height: 30px;
+    }
+
+    /* Tombol fullscreen */
+    #fullscreenBtn {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      font-size: 22px;
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      z-index: 1000;
+      padding: 5px 10px;
+      border-radius: 8px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    #fullscreenBtn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+  </style>
 </head>
-<body style="font-family:sans-serif; text-align:center; margin-top:50px;">
-  <h2>Form Tes</h2>
-  <form>
-    <input type="text" placeholder="Isi sesuatu..." />
-    <button>Kirim</button>
-  </form>
+<body>
+  <!-- Tombol Fullscreen -->
+  <button id="fullscreenBtn"><-</button>
+
+  <div id="appContainer">
+    <div class="header">
+      <img src="https://edoadityasaputra.github.io/barcode-to-sheet/MI-Khoirul-Huda_C3.png" alt="Logo Sekolah">
+      <h2>Form Penggunaan Lab Komputer</h2>
+      <h3>MI Khoirul Huda Bedahan</h3>
+    </div>
+
+    <!-- Formulir Pengisian -->
+    <form id="labForm">
+      <div>
+        <label for="nama_instansi">Nama Instansi</label>
+        <input type="text" id="nama_instansi" name="nama_instansi" required>
+      </div>
+
+      <div>
+        <label for="nama_guru">Nama Guru</label>
+        <input type="text" id="nama_guru" name="nama_guru" required>
+      </div>
+
+      <div>
+        <label for="hari">Hari</label>
+        <select id="hari" name="hari" required>
+          <option value="" disabled selected>-- Pilih Hari --</option>
+          <option>Senin</option>
+          <option>Selasa</option>
+          <option>Rabu</option>
+          <option>Kamis</option>
+          <option>Jumat</option>
+          <option>Sabtu</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="tanggal">Tanggal</label>
+        <input type="date" id="tanggal" name="tanggal" required>
+      </div>
+
+      <div>
+        <label for="waktu_penggunaan">Waktu Penggunaan</label>
+        <input type="text" id="waktu_penggunaan" name="waktu_penggunaan" placeholder="Misal: 09:00 - 10:00" required>
+      </div>
+
+      <button type="submit" id="kirimBtn" class="btn">Kirim</button>
+      <button type="reset" id="resetBtn" class="btn">Reset</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    // Ganti dengan URL GAS kamu sendiri
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbziavkcZcSTVgiPHBAPv5F4IPgkgNSty2twOKwBlJVd-Ip3RbEUrzIqmpeBVC4MRB26/exec";
+
+    const form = document.getElementById("labForm");
+    const resultDiv = document.getElementById("result");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      resultDiv.innerHTML = "⏳ Mengirim data...";
+
+      const data = {
+        nama_instansi: form.nama_instansi.value,
+        nama_guru: form.nama_guru.value,
+        hari: form.hari.value,
+        tanggal: form.tanggal.value,
+        waktu_penggunaan: form.waktu_penggunaan.value
+      };
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const text = await res.text();
+        resultDiv.innerHTML = `<span style="color:green;">✅ Data berhasil dikirim!</span><br>${text}`;
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        resultDiv.innerHTML = `<span style="color:red;">❌ Gagal mengirim data. Coba lagi.</span>`;
+      }
+    });
+
+    // Tombol fullscreen
+    const fsBtn = document.getElementById("fullscreenBtn");
+    let isFullscreen = false;
+
+    fsBtn.textContent = "<-";
+
+    fsBtn.addEventListener("click", async () => {
+      try {
+        if (!isFullscreen) {
+          const el = document.documentElement;
+          if (el.requestFullscreen) await el.requestFullscreen({ navigationUI: "hide" });
+          else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+          isFullscreen = true;
+        } else {
+          if (document.exitFullscreen) await document.exitFullscreen();
+          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+          isFullscreen = false;
+        }
+      } catch (err) {
+        console.error("Gagal ubah fullscreen:", err);
+      }
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      isFullscreen = !!document.fullscreenElement;
+    });
+  </script>
 </body>
 </html>
