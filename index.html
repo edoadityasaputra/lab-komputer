@@ -51,12 +51,13 @@
       gap: 12px;
     }
 
-    input, select {
+    input, select, textarea {
       width: 100%;
       padding: 10px;
       border-radius: 8px;
       border: 1px solid #ccc;
       box-sizing: border-box;
+      font-family: inherit;
     }
 
     button {
@@ -179,7 +180,7 @@
       color: #333;
     }
 
-    /* 🔹 Style untuk label form - JARAK LEBIH RAPAT */
+    /* 🔹 Style untuk label form */
     .form-label {
       font-weight: bold;
       margin-bottom: 2px;
@@ -188,18 +189,14 @@
       font-size: 14px;
     }
 
-    /* 🔹 Style khusus untuk input tanggal */
-    input[type="date"] {
-      position: relative;
-    }
-
-    input[type="date"]:invalid {
-      color: #999;
-    }
-
-    /* 🔹 Group form yang rapat */
     .form-group {
       margin-bottom: 5px;
+    }
+
+    /* 🔹 Input kegiatan lainnya */
+    #lainnyaBox {
+      display: none;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -242,7 +239,6 @@
         </select>
       </div>
 
-      <!-- 🔹 PERBAIKAN: Input tanggal dengan label jelas dan jarak rapat -->
       <div class="form-group">
         <label class="form-label">Tanggal Penggunaan</label>
         <input type="date" name="tanggal" required title="Pilih tanggal penggunaan">
@@ -272,6 +268,22 @@
         </div>
       </div>
 
+      <!-- 🔹 Tambahan: Jenis Kegiatan -->
+      <div class="form-group">
+        <label class="form-label">Jenis Kegiatan</label>
+        <select name="jenis_kegiatan" id="jenisKegiatan" required>
+          <option value="" disabled selected>-- Pilih Jenis Kegiatan --</option>
+          <option>Kegiatan pembelajaran dan praktik</option>
+          <option>Kegiatan ujian</option>
+          <option>Kegiatan instansi</option>
+          <option value="lainnya">Lainnya</option>
+        </select>
+        <div id="lainnyaBox">
+          <label class="form-label">Lainnya :</label>
+          <input type="text" name="kegiatan_lainnya" placeholder="Tuliskan kegiatan (opsional)">
+        </div>
+      </div>
+
       <button type="submit" style="background-color:#2196F3;">Kirim</button>
     </form>
 
@@ -295,6 +307,17 @@
     const resultDiv = document.getElementById("result");
     const rekapDiv = document.getElementById("rekapData");
     const backBtn = document.getElementById("backBtn");
+    const jenisKegiatan = document.getElementById("jenisKegiatan");
+    const lainnyaBox = document.getElementById("lainnyaBox");
+
+    // 🔹 Tampilkan kolom "lainnya" jika dipilih
+    jenisKegiatan.addEventListener("change", () => {
+      if (jenisKegiatan.value === "lainnya") {
+        lainnyaBox.style.display = "block";
+      } else {
+        lainnyaBox.style.display = "none";
+      }
+    });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -325,9 +348,11 @@
           <p><b>Hari:</b> ${d.hari}</p>
           <p><b>Tanggal:</b> ${d.tanggal}</p>
           <p><b>Waktu Penggunaan:</b> ${d.waktu_penggunaan}</p>
+          <p><b>Jenis Kegiatan:</b> ${d.jenis_kegiatan || d.kegiatan_lainnya || "-"}</p>
         `;
 
         form.reset();
+        lainnyaBox.style.display = "none";
       } catch (err) {
         loadingDiv.innerHTML = `<span style="color:red;">❌ Gagal mengirim data. Coba lagi.</span>`;
       }
