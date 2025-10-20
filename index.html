@@ -128,13 +128,11 @@
       background-color: #0b5ed7;
     }
 
-    /* 🔹 Gaya untuk waktu mulai & selesai */
+    /* 🔹 Waktu mulai & selesai */
     .waktu-container {
       display: flex;
-      justify-content: space-between;
       gap: 10px;
     }
-
     .waktu-container select {
       flex: 1;
     }
@@ -149,7 +147,7 @@
 
   <div id="container">
     <form id="labForm">
-      <!-- 🔹 Nama Instansi: Pilihan Dropdown -->
+      <!-- 🔹 Nama Instansi (dropdown) -->
       <select name="nama_instansi" required>
         <option value="" disabled selected>-- Pilih Instansi --</option>
         <option>RA KHOIRUL HUDA</option>
@@ -173,25 +171,23 @@
 
       <input type="date" name="tanggal" required>
 
-      <!-- 🔹 Waktu Penggunaan (Mulai & Selesai) -->
+      <!-- 🔹 Waktu mulai & selesai -->
       <div class="waktu-container">
         <select id="waktuMulai" required>
           <option value="" disabled selected>Mulai</option>
-          <option>07:00</option><option>08:00</option><option>09:00</option>
-          <option>10:00</option><option>11:00</option><option>12:00</option>
-          <option>13:00</option><option>14:00</option><option>15:00</option>
+          <option>06:00</option><option>07:00</option><option>08:00</option>
+          <option>09:00</option><option>10:00</option><option>11:00</option>
+          <option>12:00</option><option>13:00</option><option>14:00</option>
+          <option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
         </select>
-
         <select id="waktuSelesai" required>
           <option value="" disabled selected>Selesai</option>
-          <option>08:00</option><option>09:00</option><option>10:00</option>
-          <option>11:00</option><option>12:00</option><option>13:00</option>
-          <option>14:00</option><option>15:00</option><option>16:00</option>
+          <option>06:00</option><option>07:00</option><option>08:00</option>
+          <option>09:00</option><option>10:00</option><option>11:00</option>
+          <option>12:00</option><option>13:00</option><option>14:00</option>
+          <option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
         </select>
       </div>
-
-      <!-- Field tersembunyi untuk gabungan waktu -->
-      <input type="hidden" name="waktu_penggunaan" id="waktu_penggunaan">
 
       <button type="submit" style="background-color:#2196F3;">Kirim</button>
     </form>
@@ -219,25 +215,24 @@
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const mulai = document.getElementById("waktuMulai").value;
-      const selesai = document.getElementById("waktuSelesai").value;
-      document.getElementById("waktu_penggunaan").value = `${mulai} - ${selesai}`;
-
       form.style.display = "none";
       loadingDiv.style.display = "block";
 
+      const waktuMulai = document.getElementById("waktuMulai").value;
+      const waktuSelesai = document.getElementById("waktuSelesai").value;
+      const waktu_penggunaan = `${waktuMulai} - ${waktuSelesai}`;
+
       const formData = new FormData(form);
+      formData.append("waktu_penggunaan", waktu_penggunaan);
 
       try {
         const res = await fetch(SCRIPT_URL, { method: "POST", body: formData });
         const text = await res.text();
+        const json = JSON.parse(text);
+        const d = json.data;
 
         loadingDiv.style.display = "none";
         resultDiv.style.display = "block";
-
-        const json = JSON.parse(text);
-        const d = json.data;
 
         rekapDiv.innerHTML = `
           <p><b>Nama Instansi:</b> ${d.nama_instansi}</p>
