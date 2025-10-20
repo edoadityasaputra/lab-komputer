@@ -110,7 +110,6 @@
       width: 100%;
     }
 
-    /* 🔹 Tombol ke Google Site */
     .siteLinkBtn {
       background-color: #0d6efd;
       color: white;
@@ -128,10 +127,20 @@
     .siteLinkBtn:hover {
       background-color: #0b5ed7;
     }
+
+    /* 🔹 Gaya untuk waktu mulai & selesai */
+    .waktu-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .waktu-container select {
+      flex: 1;
+    }
   </style>
 </head>
 <body>
-  <!-- 🔹 HEADER -->
   <div class="header">
     <img src="https://edoadityasaputra.github.io/barcode-to-sheet/MI-Khoirul-Huda_C3.png" alt="Logo Sekolah">
     <h2>Form Penggunaan Lab Komputer</h2>
@@ -139,9 +148,17 @@
   </div>
 
   <div id="container">
-    <!-- 🔹 FORM -->
     <form id="labForm">
-      <input type="text" name="nama_instansi" placeholder="Nama Instansi" required>
+      <!-- 🔹 Nama Instansi: Pilihan Dropdown -->
+      <select name="nama_instansi" required>
+        <option value="" disabled selected>-- Pilih Instansi --</option>
+        <option>RA KHOIRUL HUDA</option>
+        <option>MI KHOIRUL HUDA BEDAHAN</option>
+        <option>MIT RAUDLATUL ULUM</option>
+        <option>MTs SALAFIYAH</option>
+        <option>SMK TAMAN ILMU</option>
+      </select>
+
       <input type="text" name="nama_guru" placeholder="Nama Guru" required>
 
       <select name="hari" required>
@@ -155,23 +172,39 @@
       </select>
 
       <input type="date" name="tanggal" required>
-      <input type="text" name="waktu_penggunaan" placeholder="Contoh: 09:00 - 10:00" required>
+
+      <!-- 🔹 Waktu Penggunaan (Mulai & Selesai) -->
+      <div class="waktu-container">
+        <select id="waktuMulai" required>
+          <option value="" disabled selected>Mulai</option>
+          <option>07:00</option><option>08:00</option><option>09:00</option>
+          <option>10:00</option><option>11:00</option><option>12:00</option>
+          <option>13:00</option><option>14:00</option><option>15:00</option>
+        </select>
+
+        <select id="waktuSelesai" required>
+          <option value="" disabled selected>Selesai</option>
+          <option>08:00</option><option>09:00</option><option>10:00</option>
+          <option>11:00</option><option>12:00</option><option>13:00</option>
+          <option>14:00</option><option>15:00</option><option>16:00</option>
+        </select>
+      </div>
+
+      <!-- Field tersembunyi untuk gabungan waktu -->
+      <input type="hidden" name="waktu_penggunaan" id="waktu_penggunaan">
 
       <button type="submit" style="background-color:#2196F3;">Kirim</button>
     </form>
 
-    <!-- 🔹 HALAMAN LOADING -->
     <div id="loading">⏳ Sedang mengirim data...</div>
 
-    <!-- 🔹 HASIL REKAP -->
     <div id="result">
       <p class="success">✅ Data berhasil dikirim!</p>
       <div class="rekap" id="rekapData"></div>
       <button class="backBtn" id="backBtn">Kembali ke Form</button>
     </div>
 
-    <!-- 🔹 TOMBOL LIHAT REKAP (MENUJU G.SITE) -->
-    <a href="https://script.google.com/macros/s/AKfycbziavkcZcSTVgiPHBAPv5F4IPgkgNSty2twOKwBlJVd-Ip3RbEUrzIqmpeBVC4MRB26/exec" target="_blank" class="siteLinkBtn">
+    <a href="https://sites.google.com/view/lab-komputer-yaru?usp=sharing" target="_blank" class="siteLinkBtn">
       🔍 Lihat Rekap Penggunaan Lab Komputer
     </a>
   </div>
@@ -187,7 +220,10 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // 🔹 Tampilkan halaman loading
+      const mulai = document.getElementById("waktuMulai").value;
+      const selesai = document.getElementById("waktuSelesai").value;
+      document.getElementById("waktu_penggunaan").value = `${mulai} - ${selesai}`;
+
       form.style.display = "none";
       loadingDiv.style.display = "block";
 
@@ -197,7 +233,6 @@
         const res = await fetch(SCRIPT_URL, { method: "POST", body: formData });
         const text = await res.text();
 
-        // 🔹 Tampilkan hasil
         loadingDiv.style.display = "none";
         resultDiv.style.display = "block";
 
