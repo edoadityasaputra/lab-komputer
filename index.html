@@ -25,10 +25,6 @@
       margin-bottom: 10px;
     }
 
-    .header h2, .header h3 {
-      margin: 5px 0;
-    }
-
     #container {
       width: 100%;
       display: flex;
@@ -51,13 +47,12 @@
       gap: 12px;
     }
 
-    input, select, textarea {
+    input, select {
       width: 100%;
       padding: 10px;
       border-radius: 8px;
       border: 1px solid #ccc;
       box-sizing: border-box;
-      font-family: inherit;
     }
 
     button {
@@ -129,75 +124,15 @@
       background-color: #0b5ed7;
     }
 
-    /* 🔹 Kotak waktu besar */
-    .waktu-section {
-      text-align: center;
-    }
-
-    .waktu-section label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .waktu-labels {
-      display: flex;
-      justify-content: space-between;
-      font-weight: bold;
-      margin-bottom: 3px;
-    }
-
-    .waktu-box {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .time-input {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #f1f1f1;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 10px 12px;
-      width: 45%;
-      justify-content: center;
-    }
-
-    .time-input input {
-      width: 45px;
-      border: none;
-      background: transparent;
-      text-align: center;
-      font-size: 13px;
-      outline: none;
-    }
-
-    .separator {
-      font-weight: bold;
-      color: #333;
-    }
-
-    /* 🔹 Style untuk label form */
-    .form-label {
-      font-weight: bold;
-      margin-bottom: 2px;
-      display: block;
-      color: #333;
-      font-size: 14px;
-    }
-
-    .form-group {
-      margin-bottom: 5px;
-    }
-
-    /* 🔹 Input kegiatan lainnya */
-    #lainnyaBox {
-      display: none;
-      margin-top: 5px;
-    }
+    .waktu-section { text-align: center; }
+    .waktu-section label { font-weight: bold; display: block; margin-bottom: 5px; }
+    .waktu-labels { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 3px; }
+    .waktu-box { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .time-input { display: inline-flex; align-items: center; gap: 4px; background: #f1f1f1; border: 1px solid #ccc; border-radius: 8px; padding: 10px 12px; width: 45%; justify-content: center; }
+    .time-input input { width: 45px; border: none; background: transparent; text-align: center; font-size: 13px; outline: none; }
+    .separator { font-weight: bold; color: #333; }
+    .form-label { font-weight: bold; margin-bottom: 2px; display: block; color: #333; font-size: 14px; }
+    .form-group { margin-bottom: 5px; }
   </style>
 </head>
 <body>
@@ -244,7 +179,6 @@
         <input type="date" name="tanggal" required title="Pilih tanggal penggunaan">
       </div>
 
-      <!-- 🔹 Bagian waktu penggunaan -->
       <div class="form-group">
         <div class="waktu-section">
           <label class="form-label">Waktu Penggunaan</label>
@@ -268,20 +202,17 @@
         </div>
       </div>
 
-      <!-- 🔹 Tambahan: Jenis Kegiatan -->
+      <!-- 🔹 Tambahan Jenis Kegiatan -->
       <div class="form-group">
         <label class="form-label">Jenis Kegiatan</label>
-        <select name="jenis_kegiatan" id="jenisKegiatan" required>
+        <select id="jenisKegiatan" name="jenis_kegiatan" required>
           <option value="" disabled selected>-- Pilih Jenis Kegiatan --</option>
-          <option>Kegiatan pembelajaran dan praktik</option>
-          <option>Kegiatan ujian</option>
-          <option>Kegiatan instansi</option>
-          <option value="lainnya">Lainnya</option>
+          <option value="Kegiatan pembelajaran dan praktik">Kegiatan pembelajaran dan praktik</option>
+          <option value="Kegiatan ujian">Kegiatan ujian</option>
+          <option value="Kegiatan instansi">Kegiatan instansi</option>
+          <option value="Lainnya">Lainnya</option>
         </select>
-        <div id="lainnyaBox">
-          <label class="form-label">Lainnya :</label>
-          <input type="text" name="kegiatan_lainnya" placeholder="Tuliskan kegiatan (opsional)">
-        </div>
+        <input type="text" id="lainnyaInput" name="jenis_kegiatan_lainnya" placeholder="Lainnya: ..." style="display:none; margin-top:6px;">
       </div>
 
       <button type="submit" style="background-color:#2196F3;">Kirim</button>
@@ -307,15 +238,17 @@
     const resultDiv = document.getElementById("result");
     const rekapDiv = document.getElementById("rekapData");
     const backBtn = document.getElementById("backBtn");
-    const jenisKegiatan = document.getElementById("jenisKegiatan");
-    const lainnyaBox = document.getElementById("lainnyaBox");
 
-    // 🔹 Tampilkan kolom "lainnya" jika dipilih
-    jenisKegiatan.addEventListener("change", () => {
-      if (jenisKegiatan.value === "lainnya") {
-        lainnyaBox.style.display = "block";
+    const jenisSelect = document.getElementById("jenisKegiatan");
+    const lainnyaInput = document.getElementById("lainnyaInput");
+
+    // 🔹 Tampilkan kolom "Lainnya" hanya saat dipilih
+    jenisSelect.addEventListener("change", () => {
+      if (jenisSelect.value === "Lainnya") {
+        lainnyaInput.style.display = "block";
       } else {
-        lainnyaBox.style.display = "none";
+        lainnyaInput.style.display = "none";
+        lainnyaInput.value = "";
       }
     });
 
@@ -330,8 +263,15 @@
       const menitSelesai = document.getElementById("menitSelesai").value.padStart(2, '0');
       const waktu_penggunaan = `${jamMulai}:${menitMulai} - ${jamSelesai}:${menitSelesai}`;
 
+      // 🔹 Ambil jenis kegiatan
+      let jenisKegiatanValue = jenisSelect.value;
+      if (jenisKegiatanValue === "Lainnya" && lainnyaInput.value.trim() !== "") {
+        jenisKegiatanValue = `Lainnya: ${lainnyaInput.value.trim()}`;
+      }
+
       const formData = new FormData(form);
       formData.append("waktu_penggunaan", waktu_penggunaan);
+      formData.append("jenis_kegiatan", jenisKegiatanValue);
 
       try {
         const res = await fetch(SCRIPT_URL, { method: "POST", body: formData });
@@ -348,11 +288,10 @@
           <p><b>Hari:</b> ${d.hari}</p>
           <p><b>Tanggal:</b> ${d.tanggal}</p>
           <p><b>Waktu Penggunaan:</b> ${d.waktu_penggunaan}</p>
-          <p><b>Jenis Kegiatan:</b> ${d.jenis_kegiatan || d.kegiatan_lainnya || "-"}</p>
+          <p><b>Jenis Kegiatan:</b> ${d.jenis_kegiatan}</p>
         `;
 
         form.reset();
-        lainnyaBox.style.display = "none";
       } catch (err) {
         loadingDiv.innerHTML = `<span style="color:red;">❌ Gagal mengirim data. Coba lagi.</span>`;
       }
