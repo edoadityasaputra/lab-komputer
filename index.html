@@ -232,76 +232,85 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbziavkcZcSTVgiPHBAPv5F4IPgkgNSty2twOKwBlJVd-Ip3RbEUrzIqmpeBVC4MRB26/exec";
-    const form = document.getElementById("labForm");
-    const loadingDiv = document.getElementById("loading");
-    const resultDiv = document.getElementById("result");
-    const rekapDiv = document.getElementById("rekapData");
-    const backBtn = document.getElementById("backBtn");
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbziavkcZcSTVgiPHBAPv5F4IPgkgNSty2twOKwBlJVd-Ip3RbEUrzIqmpeBVC4MRB26/exec";
+  const form = document.getElementById("labForm");
+  const loadingDiv = document.getElementById("loading");
+  const resultDiv = document.getElementById("result");
+  const rekapDiv = document.getElementById("rekapData");
+  const backBtn = document.getElementById("backBtn");
 
-    const jenisSelect = document.getElementById("jenisKegiatan");
-    const lainnyaInput = document.getElementById("lainnyaInput");
+  const jenisSelect = document.getElementById("jenisKegiatan");
+  const lainnyaInput = document.getElementById("lainnyaInput");
 
-    // 🔹 Tampilkan kolom "Lainnya" hanya saat dipilih
-    jenisSelect.addEventListener("change", () => {
-      if (jenisSelect.value === "Lainnya") {
-        lainnyaInput.style.display = "block";
-      } else {
-        lainnyaInput.style.display = "none";
-        lainnyaInput.value = "";
-      }
-    });
+  // 🔹 Tampilkan kolom "Lainnya" hanya saat dipilih
+  jenisSelect.addEventListener("change", () => {
+    if (jenisSelect.value === "Lainnya") {
+      lainnyaInput.style.display = "block";
+    } else {
+      lainnyaInput.style.display = "none";
+      lainnyaInput.value = "";
+    }
+  });
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      form.style.display = "none";
-      loadingDiv.style.display = "block";
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    form.style.display = "none";
+    loadingDiv.style.display = "block";
 
-      const jamMulai = document.getElementById("jamMulai").value.padStart(2, '0');
-      const menitMulai = document.getElementById("menitMulai").value.padStart(2, '0');
-      const jamSelesai = document.getElementById("jamSelesai").value.padStart(2, '0');
-      const menitSelesai = document.getElementById("menitSelesai").value.padStart(2, '0');
-      const waktu_penggunaan = `${jamMulai}:${menitMulai} - ${jamSelesai}:${menitSelesai}`;
+    // 🔹 Ambil waktu penggunaan
+    const jamMulai = document.getElementById("jamMulai").value.padStart(2, '0');
+    const menitMulai = document.getElementById("menitMulai").value.padStart(2, '0');
+    const jamSelesai = document.getElementById("jamSelesai").value.padStart(2, '0');
+    const menitSelesai = document.getElementById("menitSelesai").value.padStart(2, '0');
+    const waktu_penggunaan = `${jamMulai}:${menitMulai} - ${jamSelesai}:${menitSelesai}`;
 
-      // 🔹 Ambil jenis kegiatan
-      let jenisKegiatanValue = jenisSelect.value;
-      if (jenisKegiatanValue === "Lainnya" && lainnyaInput.value.trim() !== "") {
-        jenisKegiatanValue = `Lainnya: ${lainnyaInput.value.trim()}`;
-      }
+    // 🔹 Ambil jenis kegiatan (handle opsi "Lainnya")
+    let jenisKegiatanValue = jenisSelect.value;
+    if (jenisKegiatanValue === "Lainnya" && lainnyaInput.value.trim() !== "") {
+      jenisKegiatanValue = `Lainnya: ${lainnyaInput.value.trim()}`;
+    }
 
-      const formData = new FormData(form);
-      formData.set("waktu_penggunaan", waktu_penggunaan); // set = ganti/overwrite kalau sudah ada
-      formData.set("jenis_kegiatan", jenisKegiatanValue); // pastikan hanya satu field ini yang dikirim
+    // 🔹 Buat FormData manual agar semua field dijamin terkirim
+    const formData = new FormData();
+    formData.append("nama_instansi", form.nama_instansi.value);
+    formData.append("nama_guru", form.nama_guru.value);
+    formData.append("hari", form.hari.value);
+    formData.append("tanggal", form.tanggal.value);
+    formData.append("waktu_penggunaan", waktu_penggunaan);
+    formData.append("jenis_kegiatan", jenisKegiatanValue);
 
+    console.log("Data dikirim:", Object.fromEntries(formData));
 
-      try {
-        const res = await fetch(SCRIPT_URL, { method: "POST", body: formData });
-        const text = await res.text();
-        const json = JSON.parse(text);
-        const d = json.data;
+    try {
+      const res = await fetch(SCRIPT_URL, { method: "POST", body: formData });
+      const text = await res.text();
+      const json = JSON.parse(text);
+      const d = json.data;
 
-        loadingDiv.style.display = "none";
-        resultDiv.style.display = "block";
+      loadingDiv.style.display = "none";
+      resultDiv.style.display = "block";
 
-        rekapDiv.innerHTML = `
-          <p><b>Nama Instansi:</b> ${d.nama_instansi}</p>
-          <p><b>Nama Guru:</b> ${d.nama_guru}</p>
-          <p><b>Hari:</b> ${d.hari}</p>
-          <p><b>Tanggal:</b> ${d.tanggal}</p>
-          <p><b>Waktu Penggunaan:</b> ${d.waktu_penggunaan}</p>
-          <p><b>Jenis Kegiatan:</b> ${d.jenis_kegiatan}</p>
-        `;
+      rekapDiv.innerHTML = `
+        <p><b>Nama Instansi:</b> ${d.nama_instansi}</p>
+        <p><b>Nama Guru:</b> ${d.nama_guru}</p>
+        <p><b>Hari:</b> ${d.hari}</p>
+        <p><b>Tanggal:</b> ${d.tanggal}</p>
+        <p><b>Waktu Penggunaan:</b> ${d.waktu_penggunaan}</p>
+        <p><b>Jenis Kegiatan:</b> ${d.jenis_kegiatan}</p>
+      `;
 
-        form.reset();
-      } catch (err) {
-        loadingDiv.innerHTML = `<span style="color:red;">❌ Gagal mengirim data. Coba lagi.</span>`;
-      }
-    });
+      form.reset();
+    } catch (err) {
+      loadingDiv.innerHTML = `<span style="color:red;">❌ Gagal mengirim data. Coba lagi.</span>`;
+      console.error(err);
+    }
+  });
 
-    backBtn.addEventListener("click", () => {
-      resultDiv.style.display = "none";
-      form.style.display = "block";
-    });
-  </script>
+  backBtn.addEventListener("click", () => {
+    resultDiv.style.display = "none";
+    form.style.display = "block";
+  });
+</script>
+
 </body>
 </html>
