@@ -128,26 +128,55 @@
       background-color: #0b5ed7;
     }
 
-    /* 🔹 Gaya untuk input waktu */
-    .waktu-container {
+    /* 🔹 Kotak waktu besar */
+    .waktu-section {
+      text-align: center;
+    }
+
+    .waktu-section label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .waktu-labels {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .waktu-box {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 5px;
+      justify-content: space-between;
+      gap: 10px;
     }
 
-    .waktu-container input {
-      width: 50px;
-      text-align: center;
+    .time-input {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f1f1f1;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 8px;
-      font-size: 15px;
+      border-radius: 8px;
+      padding: 8px 10px;
+      width: 45%;
+      justify-content: center;
     }
 
-    .waktu-label {
-      font-weight: bold;
+    .time-input input {
+      width: 35px;
+      border: none;
+      background: transparent;
       text-align: center;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .separator {
+      font-weight: bold;
+      color: #333;
     }
   </style>
 </head>
@@ -183,16 +212,26 @@
 
       <input type="date" name="tanggal" required>
 
-      <!-- 🔹 Input jam & menit -->
-      <label class="waktu-label">Waktu Penggunaan</label>
-      <div class="waktu-container">
-        <input type="number" id="jamMulai" min="0" max="23" placeholder="HH" required>
-        :
-        <input type="number" id="menitMulai" min="0" max="59" placeholder="MM" required>
-        -
-        <input type="number" id="jamSelesai" min="0" max="23" placeholder="HH" required>
-        :
-        <input type="number" id="menitSelesai" min="0" max="59" placeholder="MM" required>
+      <!-- 🔹 Bagian waktu penggunaan -->
+      <div class="waktu-section">
+        <label>Waktu Penggunaan</label>
+        <div class="waktu-labels">
+          <span>Mulai</span>
+          <span>Selesai</span>
+        </div>
+        <div class="waktu-box">
+          <div class="time-input">
+            <input type="number" id="jamMulai" min="0" max="23" placeholder="HH" required>
+            <span class="separator">:</span>
+            <input type="number" id="menitMulai" min="0" max="59" placeholder="MM" required>
+          </div>
+          <span>-</span>
+          <div class="time-input">
+            <input type="number" id="jamSelesai" min="0" max="23" placeholder="HH" required>
+            <span class="separator">:</span>
+            <input type="number" id="menitSelesai" min="0" max="59" placeholder="MM" required>
+          </div>
+        </div>
       </div>
 
       <button type="submit" style="background-color:#2196F3;">Kirim</button>
