@@ -166,67 +166,63 @@
     <div id="result"></div>
   </div>
 
-  <script>
-    // Ganti dengan URL GAS kamu sendiri
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbziavkcZcSTVgiPHBAPv5F4IPgkgNSty2twOKwBlJVd-Ip3RbEUrzIqmpeBVC4MRB26/exec";
+ <script>
+  // 🔹 URL Web App GAS kamu
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbziavkcZcSTVgiPHBAPv5F4IPgkgNSty2twOKwBlJVd-Ip3RbEUrzIqmpeBVC4MRB26/exec";
 
-    const form = document.getElementById("labForm");
-    const resultDiv = document.getElementById("result");
+  const form = document.getElementById("labForm");
+  const resultDiv = document.getElementById("result");
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      resultDiv.innerHTML = "⏳ Mengirim data...";
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    resultDiv.innerHTML = "⏳ Mengirim data...";
 
-      const data = {
-        nama_instansi: form.nama_instansi.value,
-        nama_guru: form.nama_guru.value,
-        hari: form.hari.value,
-        tanggal: form.tanggal.value,
-        waktu_penggunaan: form.waktu_penggunaan.value
-      };
+    // 🔹 Gunakan FormData agar GAS bisa menerima tanpa error CORS
+    const formData = new FormData(form);
 
-      try {
-        const res = await fetch(SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: formData
+      });
 
-        const text = await res.text();
-        resultDiv.innerHTML = `<span style="color:green;">✅ Data berhasil dikirim!</span><br>${text}`;
-        form.reset();
-      } catch (err) {
-        console.error(err);
-        resultDiv.innerHTML = `<span style="color:red;">❌ Gagal mengirim data. Coba lagi.</span>`;
+      const text = await res.text();
+      resultDiv.innerHTML = `<span style="color:green;">✅ Data berhasil dikirim!</span><br>${text}`;
+      form.reset();
+    } catch (err) {
+      console.error(err);
+      resultDiv.innerHTML = `<span style="color:red;">❌ Gagal mengirim data. Coba lagi.</span>`;
+    }
+  });
+
+  // 🔹 Tombol fullscreen
+  const fsBtn = document.getElementById("fullscreenBtn");
+  let isFullscreen = false;
+
+  fsBtn.textContent = "<-";
+
+  fsBtn.addEventListener("click", async () => {
+    try {
+      if (!isFullscreen) {
+        const el = document.documentElement;
+        if (el.requestFullscreen) await el.requestFullscreen({ navigationUI: "hide" });
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        isFullscreen = true;
+      } else {
+        if (document.exitFullscreen) await document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        isFullscreen = false;
       }
-    });
+    } catch (err) {
+      console.error("Gagal ubah fullscreen:", err);
+    }
+  });
 
-    // Tombol fullscreen
-    const fsBtn = document.getElementById("fullscreenBtn");
-    let isFullscreen = false;
+  document.addEventListener("fullscreenchange", () => {
+    isFullscreen = !!document.fullscreenElement;
+  });
+</script>
 
-    fsBtn.textContent = "<-";
-
-    fsBtn.addEventListener("click", async () => {
-      try {
-        if (!isFullscreen) {
-          const el = document.documentElement;
-          if (el.requestFullscreen) await el.requestFullscreen({ navigationUI: "hide" });
-          else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-          isFullscreen = true;
-        } else {
-          if (document.exitFullscreen) await document.exitFullscreen();
-          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-          isFullscreen = false;
-        }
-      } catch (err) {
-        console.error("Gagal ubah fullscreen:", err);
-      }
-    });
-
-    document.addEventListener("fullscreenchange", () => {
-      isFullscreen = !!document.fullscreenElement;
-    });
-  </script>
+  
 </body>
 </html>
