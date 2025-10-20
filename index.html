@@ -128,13 +128,26 @@
       background-color: #0b5ed7;
     }
 
-    /* 🔹 Waktu mulai & selesai */
+    /* 🔹 Gaya untuk input waktu */
     .waktu-container {
       display: flex;
-      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
     }
-    .waktu-container select {
-      flex: 1;
+
+    .waktu-container input {
+      width: 50px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 15px;
+    }
+
+    .waktu-label {
+      font-weight: bold;
+      text-align: center;
     }
   </style>
 </head>
@@ -147,7 +160,6 @@
 
   <div id="container">
     <form id="labForm">
-      <!-- 🔹 Nama Instansi (dropdown) -->
       <select name="nama_instansi" required>
         <option value="" disabled selected>-- Pilih Instansi --</option>
         <option>RA KHOIRUL HUDA</option>
@@ -171,22 +183,16 @@
 
       <input type="date" name="tanggal" required>
 
-      <!-- 🔹 Waktu mulai & selesai -->
+      <!-- 🔹 Input jam & menit -->
+      <label class="waktu-label">Waktu Penggunaan</label>
       <div class="waktu-container">
-        <select id="waktuMulai" required>
-          <option value="" disabled selected>Mulai</option>
-          <option>06:00</option><option>07:00</option><option>08:00</option>
-          <option>09:00</option><option>10:00</option><option>11:00</option>
-          <option>12:00</option><option>13:00</option><option>14:00</option>
-          <option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
-        </select>
-        <select id="waktuSelesai" required>
-          <option value="" disabled selected>Selesai</option>
-          <option>06:00</option><option>07:00</option><option>08:00</option>
-          <option>09:00</option><option>10:00</option><option>11:00</option>
-          <option>12:00</option><option>13:00</option><option>14:00</option>
-          <option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
-        </select>
+        <input type="number" id="jamMulai" min="0" max="23" placeholder="HH" required>
+        :
+        <input type="number" id="menitMulai" min="0" max="59" placeholder="MM" required>
+        -
+        <input type="number" id="jamSelesai" min="0" max="23" placeholder="HH" required>
+        :
+        <input type="number" id="menitSelesai" min="0" max="59" placeholder="MM" required>
       </div>
 
       <button type="submit" style="background-color:#2196F3;">Kirim</button>
@@ -218,9 +224,11 @@
       form.style.display = "none";
       loadingDiv.style.display = "block";
 
-      const waktuMulai = document.getElementById("waktuMulai").value;
-      const waktuSelesai = document.getElementById("waktuSelesai").value;
-      const waktu_penggunaan = `${waktuMulai} - ${waktuSelesai}`;
+      const jamMulai = document.getElementById("jamMulai").value.padStart(2, '0');
+      const menitMulai = document.getElementById("menitMulai").value.padStart(2, '0');
+      const jamSelesai = document.getElementById("jamSelesai").value.padStart(2, '0');
+      const menitSelesai = document.getElementById("menitSelesai").value.padStart(2, '0');
+      const waktu_penggunaan = `${jamMulai}:${menitMulai} - ${jamSelesai}:${menitSelesai}`;
 
       const formData = new FormData(form);
       formData.append("waktu_penggunaan", waktu_penggunaan);
