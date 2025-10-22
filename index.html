@@ -25,6 +25,10 @@
       margin-bottom: 10px;
     }
 
+    .header h2, .header h3 {
+      margin: 5px 0;
+    }
+
     #container {
       width: 100%;
       display: flex;
@@ -124,15 +128,79 @@
       background-color: #0b5ed7;
     }
 
-    .waktu-section { text-align: center; }
-    .waktu-section label { font-weight: bold; display: block; margin-bottom: 5px; }
-    .waktu-labels { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 3px; }
-    .waktu-box { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-    .time-input { display: inline-flex; align-items: center; gap: 4px; background: #f1f1f1; border: 1px solid #ccc; border-radius: 8px; padding: 10px 12px; width: 45%; justify-content: center; }
-    .time-input input { width: 45px; border: none; background: transparent; text-align: center; font-size: 13px; outline: none; }
-    .separator { font-weight: bold; color: #333; }
-    .form-label { font-weight: bold; margin-bottom: 2px; display: block; color: #333; font-size: 14px; }
-    .form-group { margin-bottom: 5px; }
+    /* 🔹 Kotak waktu besar */
+    .waktu-section {
+      text-align: center;
+    }
+
+    .waktu-section label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .waktu-labels {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .waktu-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .time-input {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f1f1f1;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px 12px;
+      width: 45%;
+      justify-content: center;
+    }
+
+    .time-input input {
+      width: 45px;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .separator {
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* 🔹 Style untuk label form - JARAK LEBIH RAPAT */
+    .form-label {
+      font-weight: bold;
+      margin-bottom: 2px;
+      display: block;
+      color: #333;
+      font-size: 14px;
+    }
+
+    /* 🔹 Style khusus untuk input tanggal */
+    input[type="date"] {
+      position: relative;
+    }
+
+    input[type="date"]:invalid {
+      color: #999;
+    }
+
+    /* 🔹 Group form yang rapat */
+    .form-group {
+      margin-bottom: 5px;
+    }
   </style>
 </head>
 <body>
@@ -174,11 +242,13 @@
         </select>
       </div>
 
+      <!-- 🔹 PERBAIKAN: Input tanggal dengan label jelas dan jarak rapat -->
       <div class="form-group">
         <label class="form-label">Tanggal Penggunaan</label>
         <input type="date" name="tanggal" required title="Pilih tanggal penggunaan">
       </div>
 
+      <!-- 🔹 Bagian waktu penggunaan -->
       <div class="form-group">
         <div class="waktu-section">
           <label class="form-label">Waktu Penggunaan</label>
@@ -202,19 +272,6 @@
         </div>
       </div>
 
-      <!-- 🔹 Tambahan Jenis Kegiatan -->
-      <div class="form-group">
-        <label class="form-label">Jenis Kegiatan</label>
-        <select id="jenisKegiatan" name="jenis_kegiatan" required>
-          <option value="" disabled selected>-- Pilih Jenis Kegiatan --</option>
-          <option value="Kegiatan pembelajaran dan praktik">Kegiatan pembelajaran dan praktik</option>
-          <option value="Kegiatan ujian">Kegiatan ujian</option>
-          <option value="Kegiatan instansi">Kegiatan instansi</option>
-          <option value="Lainnya">Lainnya</option>
-        </select>
-        <input type="text" id="lainnyaInput" name="jenis_kegiatan_lainnya" placeholder="Lainnya: ..." style="display:none; margin-top:6px;">
-      </div>
-
       <button type="submit" style="background-color:#2196F3;">Kirim</button>
     </form>
 
@@ -232,85 +289,54 @@
   </div>
 
   <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbziavkcZcSTVgiPHBAPv5F4IPgkgNSty2twOKwBlJVd-Ip3RbEUrzIqmpeBVC4MRB26/exec";
-  const form = document.getElementById("labForm");
-  const loadingDiv = document.getElementById("loading");
-  const resultDiv = document.getElementById("result");
-  const rekapDiv = document.getElementById("rekapData");
-  const backBtn = document.getElementById("backBtn");
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbziavkcZcSTVgiPHBAPv5F4IPgkgNSty2twOKwBlJVd-Ip3RbEUrzIqmpeBVC4MRB26/exec";
+    const form = document.getElementById("labForm");
+    const loadingDiv = document.getElementById("loading");
+    const resultDiv = document.getElementById("result");
+    const rekapDiv = document.getElementById("rekapData");
+    const backBtn = document.getElementById("backBtn");
 
-  const jenisSelect = document.getElementById("jenisKegiatan");
-  const lainnyaInput = document.getElementById("lainnyaInput");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      form.style.display = "none";
+      loadingDiv.style.display = "block";
 
-  // 🔹 Tampilkan kolom "Lainnya" hanya saat dipilih
-  jenisSelect.addEventListener("change", () => {
-    if (jenisSelect.value === "Lainnya") {
-      lainnyaInput.style.display = "block";
-    } else {
-      lainnyaInput.style.display = "none";
-      lainnyaInput.value = "";
-    }
-  });
+      const jamMulai = document.getElementById("jamMulai").value.padStart(2, '0');
+      const menitMulai = document.getElementById("menitMulai").value.padStart(2, '0');
+      const jamSelesai = document.getElementById("jamSelesai").value.padStart(2, '0');
+      const menitSelesai = document.getElementById("menitSelesai").value.padStart(2, '0');
+      const waktu_penggunaan = `${jamMulai}:${menitMulai} - ${jamSelesai}:${menitSelesai}`;
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    form.style.display = "none";
-    loadingDiv.style.display = "block";
+      const formData = new FormData(form);
+      formData.append("waktu_penggunaan", waktu_penggunaan);
 
-    // 🔹 Ambil waktu penggunaan
-    const jamMulai = document.getElementById("jamMulai").value.padStart(2, '0');
-    const menitMulai = document.getElementById("menitMulai").value.padStart(2, '0');
-    const jamSelesai = document.getElementById("jamSelesai").value.padStart(2, '0');
-    const menitSelesai = document.getElementById("menitSelesai").value.padStart(2, '0');
-    const waktu_penggunaan = `${jamMulai}:${menitMulai} - ${jamSelesai}:${menitSelesai}`;
+      try {
+        const res = await fetch(SCRIPT_URL, { method: "POST", body: formData });
+        const text = await res.text();
+        const json = JSON.parse(text);
+        const d = json.data;
 
-    // 🔹 Ambil jenis kegiatan (handle opsi "Lainnya")
-    let jenisKegiatanValue = jenisSelect.value;
-    if (jenisKegiatanValue === "Lainnya" && lainnyaInput.value.trim() !== "") {
-      jenisKegiatanValue = `Lainnya: ${lainnyaInput.value.trim()}`;
-    }
+        loadingDiv.style.display = "none";
+        resultDiv.style.display = "block";
 
-    // 🔹 Buat FormData manual agar semua field dijamin terkirim
-    const formData = new FormData();
-    formData.append("nama_instansi", form.nama_instansi.value);
-    formData.append("nama_guru", form.nama_guru.value);
-    formData.append("hari", form.hari.value);
-    formData.append("tanggal", form.tanggal.value);
-    formData.append("waktu_penggunaan", waktu_penggunaan);
-    formData.append("jenis_kegiatan", jenisKegiatanValue);
+        rekapDiv.innerHTML = `
+          <p><b>Nama Instansi:</b> ${d.nama_instansi}</p>
+          <p><b>Nama Guru:</b> ${d.nama_guru}</p>
+          <p><b>Hari:</b> ${d.hari}</p>
+          <p><b>Tanggal:</b> ${d.tanggal}</p>
+          <p><b>Waktu Penggunaan:</b> ${d.waktu_penggunaan}</p>
+        `;
 
-    console.log("Data dikirim:", Object.fromEntries(formData));
+        form.reset();
+      } catch (err) {
+        loadingDiv.innerHTML = `<span style="color:red;">❌ Gagal mengirim data. Coba lagi.</span>`;
+      }
+    });
 
-    try {
-      const res = await fetch(SCRIPT_URL, { method: "POST", body: formData });
-      const text = await res.text();
-      const json = JSON.parse(text);
-      const d = json.data;
-
-      loadingDiv.style.display = "none";
-      resultDiv.style.display = "block";
-
-      rekapDiv.innerHTML = `
-        <p><b>Nama Instansi:</b> ${d.nama_instansi}</p>
-        <p><b>Nama Guru:</b> ${d.nama_guru}</p>
-        <p><b>Hari:</b> ${d.hari}</p>
-        <p><b>Tanggal:</b> ${d.tanggal}</p>
-        <p><b>Waktu Penggunaan:</b> ${d.waktu_penggunaan}</p>
-        <p><b>Jenis Kegiatan:</b> ${d.jenis_kegiatan}</p>
-      `;
-
-      form.reset();
-    } catch (err) {
-      loadingDiv.innerHTML = `<span style="color:red;">❌ Gagal mengirim data. Coba lagi.</span>`;
-      console.error(err);
-    }
-  });
-
-  backBtn.addEventListener("click", () => {
-    resultDiv.style.display = "none";
-    form.style.display = "block";
-  });
-</script>
-
+    backBtn.addEventListener("click", () => {
+      resultDiv.style.display = "none";
+      form.style.display = "block";
+    });
+  </script>
 </body>
 </html>
